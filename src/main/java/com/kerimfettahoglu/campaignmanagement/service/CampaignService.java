@@ -3,6 +3,8 @@ package com.kerimfettahoglu.campaignmanagement.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.kerimfettahoglu.campaignmanagement.dto.CreateCampaignDto;
@@ -23,6 +25,7 @@ public class CampaignService {
 	private final CampaignRepository campaignRepository;
 	private final StatusRepository statusRepository;
 	private final CategoryRepository categoryRepostiory;
+	private final CampaignLogService campaignLogService;
 
 	public Campaign get(Integer campaignId) {
 		Optional<Campaign> campaign = campaignRepository.findById(campaignId);
@@ -32,11 +35,13 @@ public class CampaignService {
 			throw new RuntimeException("Kampanya bulunamadı.");
 	}
 
+	@Transactional
 	public Campaign create(CreateCampaignDto createCampaignDto) {
 		Campaign campaign = CreateCampaignDto.mapDtoToObj(createCampaignDto);
 		specifyCategory(campaign, createCampaignDto);
 		specifyStatus(campaign);
 		campaignRepository.save(campaign);
+		campaignLogService.createLogRecord(campaign);
 		return campaign;
 	}
 	
@@ -64,22 +69,26 @@ public class CampaignService {
 		return true;
 	}
 	
+	@Transactional
 	public Boolean activateCampaign(Integer campaignId) {
 		Optional<Campaign> optCamp = campaignRepository.findById(campaignId);
 		if (optCamp.isPresent() && (StatusEnum.ONAY_BEKLIYOR.getId().equals(optCamp.get().getStatus().getId()))) {
 			optCamp.get().setStatus(statusRepository.findById(StatusEnum.AKTIF.getId()).get());
 			campaignRepository.save(optCamp.get());
+			campaignLogService.createLogRecord(optCamp.get());
 			return true;
 		} else {
 			throw new RuntimeException("Kampanya bulunamadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " değil.");
 		}
 	}
 
+	@Transactional
 	public Boolean deactivateCampaign(Integer campaignId) {
 		Optional<Campaign> optCamp = campaignRepository.findById(campaignId);
 		if (optCamp.isPresent() && (StatusEnum.ONAY_BEKLIYOR.getId().equals(optCamp.get().getStatus().getId()) || StatusEnum.AKTIF.getId().equals(optCamp.get().getStatus().getId()))) {
 			optCamp.get().setStatus(statusRepository.findById(StatusEnum.DEAKTIF.getId()).get());
 			campaignRepository.save(optCamp.get());
+			campaignLogService.createLogRecord(optCamp.get());
 			return true;
 		} else {
 			throw new RuntimeException("Kampanya bulunamadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " ," + StatusEnum.AKTIF.getDescription() + " değil.");
