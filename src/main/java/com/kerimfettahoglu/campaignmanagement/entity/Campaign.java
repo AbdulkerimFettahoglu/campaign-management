@@ -16,8 +16,10 @@ import org.hibernate.validator.constraints.Length;
 
 import com.kerimfettahoglu.campaignmanagement.constant.Constants;
 
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Entity
 @Data
 public class Campaign {
