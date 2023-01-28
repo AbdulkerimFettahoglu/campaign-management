@@ -1,10 +1,13 @@
 package com.kerimfettahoglu.campaignmanagement.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kerimfettahoglu.campaignmanagement.dto.CreateCampaignDto;
 import com.kerimfettahoglu.campaignmanagement.entity.Campaign;
 import com.kerimfettahoglu.campaignmanagement.service.CampaignService;
 
@@ -20,5 +23,10 @@ public class CampaignController {
 	@GetMapping
 	public Campaign getCampaign(@RequestParam Integer campaignId) {
 		return campaignService.get(campaignId);
+	}
+	
+	@PostMapping
+	public Campaign createCampaign(@RequestBody CreateCampaignDto campaignDto) {
+		return campaignService.create(campaignDto);
 	}
 }
