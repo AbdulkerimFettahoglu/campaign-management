@@ -15,6 +15,9 @@ import com.kerimfettahoglu.campaignmanagement.enumaration.StatusEnum;
 import com.kerimfettahoglu.campaignmanagement.repository.CampaignRepository;
 import com.kerimfettahoglu.campaignmanagement.repository.CategoryRepository;
 import com.kerimfettahoglu.campaignmanagement.repository.StatusRepository;
+import com.kerimfettahoglu.campaignmanagement.service.exception.CampaignNotFoundException;
+import com.kerimfettahoglu.campaignmanagement.service.exception.CategoryNotFoundException;
+import com.kerimfettahoglu.campaignmanagement.service.exception.StatusNotApplicableException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +35,7 @@ public class CampaignService {
 		if (campaign.isPresent())
 			return campaign.get();
 		else
-			throw new RuntimeException("Kampanya bulunamadı.");
+			throw new CampaignNotFoundException(campaignId);
 	}
 
 	@Transactional
@@ -48,7 +51,7 @@ public class CampaignService {
 	private void specifyCategory(Campaign campaign, CreateCampaignDto dto) {
 		Optional<Category> cat = categoryRepostiory.findById(dto.getCategory());
 		if (cat.isEmpty())
-			throw new RuntimeException("Böyle bir kategori bulunamadı.");
+			throw new CategoryNotFoundException(dto.getCategory());
 		campaign.setCategory(cat.get());
 	}
 
@@ -62,7 +65,7 @@ public class CampaignService {
 		}
 	}
 	
-	public Boolean isMukerrer(Campaign campaign) {
+	private Boolean isMukerrer(Campaign campaign) {
 		List<Campaign> result = campaignRepository.findByCategoryAndTitleAndDetails(campaign.getCategory(), campaign.getTitle(), campaign.getDetails());
 		if (result.isEmpty())
 			return false;
@@ -78,20 +81,24 @@ public class CampaignService {
 			campaignLogService.createLogRecord(optCamp.get());
 			return true;
 		} else {
-			throw new RuntimeException("Kampanya bulunamadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " değil.");
+			throw new StatusNotApplicableException(StatusEnum.ONAY_BEKLIYOR, StatusEnum.getStatus(optCamp.get().getStatus().getId()));
 		}
 	}
 
 	@Transactional
 	public Boolean deactivateCampaign(Integer campaignId) {
 		Optional<Campaign> optCamp = campaignRepository.findById(campaignId);
-		if (optCamp.isPresent() && (StatusEnum.ONAY_BEKLIYOR.getId().equals(optCamp.get().getStatus().getId()) || StatusEnum.AKTIF.getId().equals(optCamp.get().getStatus().getId()))) {
-			optCamp.get().setStatus(statusRepository.findById(StatusEnum.DEAKTIF.getId()).get());
-			campaignRepository.save(optCamp.get());
-			campaignLogService.createLogRecord(optCamp.get());
-			return true;
+		if (optCamp.isPresent()) {
+			if (StatusEnum.ONAY_BEKLIYOR.getId().equals(optCamp.get().getStatus().getId()) || StatusEnum.AKTIF.getId().equals(optCamp.get().getStatus().getId())) {
+				optCamp.get().setStatus(statusRepository.findById(StatusEnum.DEAKTIF.getId()).get());
+				campaignRepository.save(optCamp.get());
+				campaignLogService.createLogRecord(optCamp.get());
+				return true;
+			} else {
+				throw new StatusNotApplicableException(StatusEnum.ONAY_BEKLIYOR, StatusEnum.AKTIF, StatusEnum.getStatus(optCamp.get().getStatus().getId()));				
+			}
 		} else {
-			throw new RuntimeException("Kampanya bulunamadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " ," + StatusEnum.AKTIF.getDescription() + " değil.");
+			throw new CampaignNotFoundException(campaignId);
 		}
 	}
 }
