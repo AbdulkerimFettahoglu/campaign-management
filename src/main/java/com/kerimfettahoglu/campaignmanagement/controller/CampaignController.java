@@ -29,4 +29,14 @@ public class CampaignController {
 	public Campaign createCampaign(@RequestBody CreateCampaignDto campaignDto) {
 		return campaignService.create(campaignDto);
 	}
+	
+	@GetMapping
+	public Boolean activateCampaign(@RequestParam Integer campaignId) {
+		return campaignService.activateCampaign(campaignId);
+	}
+	
+	@GetMapping
+	public Boolean deactivateCampaign(@RequestParam Integer campaignId) {
+		return campaignService.deactivateCampaign(campaignId);
+	}
 }
