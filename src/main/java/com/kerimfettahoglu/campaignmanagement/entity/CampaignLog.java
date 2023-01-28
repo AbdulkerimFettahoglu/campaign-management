@@ -30,7 +30,6 @@ public class CampaignLog {
 	private Integer log_id;
 
 	@Column
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm")
 	private Date logDate;
 
 	@Column
