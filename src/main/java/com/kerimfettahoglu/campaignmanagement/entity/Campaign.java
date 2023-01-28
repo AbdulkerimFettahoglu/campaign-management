@@ -1,7 +1,5 @@
 package com.kerimfettahoglu.campaignmanagement.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,12 +14,16 @@ import org.hibernate.validator.constraints.Length;
 
 import com.kerimfettahoglu.campaignmanagement.constant.Constants;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Campaign {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
