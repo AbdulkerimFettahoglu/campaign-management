@@ -30,12 +30,12 @@ public class CampaignController {
 		return campaignService.create(campaignDto);
 	}
 	
-	@GetMapping
+	@GetMapping("/activate")
 	public Boolean activateCampaign(@RequestParam Integer campaignId) {
 		return campaignService.activateCampaign(campaignId);
 	}
 	
-	@GetMapping
+	@GetMapping("/deactivate")
 	public Boolean deactivateCampaign(@RequestParam Integer campaignId) {
 		return campaignService.deactivateCampaign(campaignId);
 	}

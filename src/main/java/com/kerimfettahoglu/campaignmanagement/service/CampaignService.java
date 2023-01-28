@@ -71,7 +71,7 @@ public class CampaignService {
 			campaignRepository.save(optCamp.get());
 			return true;
 		} else {
-			throw new RuntimeException("Kampanya bulunaadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " değil.");
+			throw new RuntimeException("Kampanya bulunamadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " değil.");
 		}
 	}
 
@@ -82,7 +82,7 @@ public class CampaignService {
 			campaignRepository.save(optCamp.get());
 			return true;
 		} else {
-			throw new RuntimeException("Kampanya bulunaadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + "," + StatusEnum.AKTIF.getDescription() + " değil.");
+			throw new RuntimeException("Kampanya bulunamadı veya durumu " + StatusEnum.ONAY_BEKLIYOR.getDescription() + " ," + StatusEnum.AKTIF.getDescription() + " değil.");
 		}
 	}
 }
