@@ -2,6 +2,8 @@ package com.kerimfettahoglu.campaignmanagement.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,7 +34,7 @@ public class CampaignController {
 	}
 	
 	@PostMapping
-	public Campaign createCampaign(@RequestBody CreateCampaignDto campaignDto) {
+	public Campaign createCampaign(@RequestBody @Valid CreateCampaignDto campaignDto) {
 		return campaignService.create(campaignDto);
 	}
 	
