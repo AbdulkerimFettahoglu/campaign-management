@@ -14,6 +14,8 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.kerimfettahoglu.campaignmanagement.constant.Constants;
+
 import lombok.Data;
 
 @Entity
@@ -23,16 +25,16 @@ public class Campaign {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 
-	@Length(min= 10, max=50, message = "Başlık uzunluğu 10 ile 50 karakter arasında olmalıdır.")
-	@Pattern(regexp = "[a-zA-Z0-9ğüşöçıİĞÜŞÖÇ]*",message = "Başlıktaki ilk karakter alfanümerik olmalıdır.")
+	@Length(min= 10, max=50, message = Constants.CAMPAIGN_TITLE_LENGTH)
+	@Pattern(regexp = Constants.CAMPAIGN_TITLE_REGEX, message = Constants.CAMPAIGN_TITLE_CHARACTER_TYPE)
 	@Column(length = 50)
 	private String title;
 
 	@Column
-	@Length(min= 20, max=200, message = "İçerik uzunluğu 20 ile 200 karakter arasında olmalıdır.")
+	@Length(min= 20, max=200, message = Constants.CAMPAIGN_DESCRIPTION_LENGTH)
 	private String details;
 
-	@NotNull(message = "Kategori bilgisi boş bırakılamaz.")
+	@NotNull(message = Constants.CAMPAIGN_CATEGORY_NULL)
 	@ManyToOne
 	@JoinColumn(name="category_id")
 	private Category category;
