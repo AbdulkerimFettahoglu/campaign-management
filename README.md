@@ -1,5 +1,15 @@
 # campaign-management
-With this project customers can manage their own campaigns via using status of campaigns. (Port numbers can change dependent to your docker run command.)
+
+With this project customers can manage their own campaigns via using status of campaigns. 
+
+### Docker
+
+You can create your own image via using following commands. (Port numbers can change dependent to your docker run command.)
+
+```
+docker build --tag=campaign-management:latest .
+docker run -p8080:8080 --name campaign-container campaign-management:latest
+```
 
 ### Swagger UI
 
