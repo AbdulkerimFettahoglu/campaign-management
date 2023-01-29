@@ -59,9 +59,9 @@ public class CampaignService {
 		if (isMukerrer(campaign)) {
 			campaign.setStatus(statusRepository.findById(StatusEnum.MUKERRER.getId()).get());
 		} else if (campaign.getCategory().getId().equals(CategoryEnum.HAYAT.getId())) {
-			campaign.setStatus(statusRepository.findById(StatusEnum.ONAY_BEKLIYOR.getId()).get());
-		} else {
 			campaign.setStatus(statusRepository.findById(StatusEnum.AKTIF.getId()).get());
+		} else {
+			campaign.setStatus(statusRepository.findById(StatusEnum.ONAY_BEKLIYOR.getId()).get());
 		}
 	}
 	
