@@ -53,9 +53,9 @@ For example (don't forget our validations):
 
 ```
 {
-    "title": "title12345",
-    "details": "description_________",
-    "category": 1
+	"title": "title12345",
+	"details": "description_________",
+	"category": 1
 }
 ```
 
